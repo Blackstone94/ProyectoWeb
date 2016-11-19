@@ -1,1 +1,46 @@
 http://aleman.site88.net/incidentes/Atendidos.php
+
+<?php
+
+$sql = "SELECT * FROM incidentes2 WHERE estado='1'";
+
+        $server = "mysql1.000webhost.com";
+        $user = "a3945180_ortega";
+        $pass = "ortega94";
+        $bd = "a3945180_db";
+
+$conexion = mysqli_connect($server, $user, $pass,$bd) 
+or die("Ha sucedido un error inexperado en la conexion de la base de datos");
+
+//generamos la consulta
+mysqli_set_charset($conexion, "utf8"); //formato de datos utf8
+
+if(!$result = mysqli_query($conexion, $sql)) die();
+
+$clientes = array(); //creamos un array
+
+while($row = mysqli_fetch_array($result)) 
+{ 
+    $id=$row['id'];
+    $fecha=$row['fecha'];
+    $latitud=$row['latitud'];
+    $longitud=$row['longitud'];
+    $descripcion=$row['descripcion'];
+    $foto=$row['foto'];
+    $estado=$row['estado'];
+    
+
+    $clientes[] = array('id'=> $id, 'fecha'=> $fecha, 'latitud'=> $latitud, 'longitud'=> $longitud,
+                        'descripcion'=> $descripcion, 'foto'=> $foto, 'estado'=> $estado);
+
+}
+    
+//desconectamos la base de datos
+$close = mysqli_close($conexion) 
+or die("Ha sucedido un error inexperado en la desconexion de la base de datos");
+  
+
+//Creamos el JSON
+$json_string = json_encode($clientes);
+echo $json_string;
+?>
